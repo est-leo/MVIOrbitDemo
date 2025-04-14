@@ -3,18 +3,17 @@ package com.estsoft.orbitmvidemo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.estsoft.orbitmvidemo.ui.MainIntent
 import com.estsoft.orbitmvidemo.ui.MainUIState
 import com.estsoft.orbitmvidemo.ui.MainViewModel
 import com.estsoft.orbitmvidemo.ui.theme.OrbitMVIDemoTheme
@@ -36,11 +35,12 @@ class MainActivity : ComponentActivity() {
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
-                    Button(modifier = Modifier.fillMaxWidth(), onClick = {
-
-                    }){
-                        Text("${state.count}")
-                    }
+                    TextField(
+                        value = state.text,
+                        onValueChange = { text ->
+                            viewModel.post(MainIntent.ChangeTextField(text))
+                        }
+                    )
                 }
             }
         }
