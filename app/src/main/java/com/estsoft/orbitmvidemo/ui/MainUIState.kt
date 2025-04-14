@@ -1,4 +1,5 @@
 package com.estsoft.orbitmvidemo.ui
 
-class MainUIState {
-}
+data class MainUIState(
+    val count: Int = 0,
+)
