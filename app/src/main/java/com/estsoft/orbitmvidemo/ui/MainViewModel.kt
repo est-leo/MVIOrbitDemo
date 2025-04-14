@@ -1,11 +1,7 @@
 package com.estsoft.orbitmvidemo.ui
 
-import androidx.lifecycle.viewModelScope
 import com.estsoft.orbitmvidemo.BaseViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.container
 
 class MainViewModel : BaseViewModel<MainUIState, MainSideEffect>() {
@@ -18,40 +14,29 @@ class MainViewModel : BaseViewModel<MainUIState, MainSideEffect>() {
     )
 
     init {
-        viewModelScope.launch(Dispatchers.Default) {
-            repeat(5000) {
-                post(MainIntent.IncreaseNumber)
-            }
-        }
-        viewModelScope.launch(Dispatchers.Default) {
-            repeat(5000) {
-                post(MainIntent.IncreaseNumber)
-            }
-        }
-        viewModelScope.launch(Dispatchers.Default) {
-            repeat(5000) {
-                post(MainIntent.IncreaseNumber)
-            }
-        }
+        post(MainIntent.IntentA)
+        post(MainIntent.IntentB)
     }
 
     fun post(intent: MainIntent) {
         when (intent) {
-            MainIntent.IncreaseNumber -> {
-//                intent {
-//                    val count = state.count
-//                    delay(1)
-//                    val newCount = count + 1
-//                    reduce {
-//                        state.copy(state.count + 1)
-//                    }
-//                }
+            //최종적으로 count는 몇일까?
+            MainIntent.IntentA -> {
                 intent {
-                    val count = state.count
-                    delay(1)
-                    val newCount = count + 1
                     reduce {
-                        state.copy(count = newCount)
+                        state.copy(count = 1)
+                    }
+                    post(MainIntent.IntentB)
+                    reduce {
+                        state.copy(count = 3)
+                    }
+                }
+            }
+
+            MainIntent.IntentB -> {
+                intent {
+                    reduce {
+                        state.copy(count = 2)
                     }
                 }
             }
