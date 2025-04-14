@@ -3,8 +3,9 @@ package com.estsoft.orbitmvidemo.ui
 import android.util.Log
 import com.estsoft.orbitmvidemo.BaseViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.yield
+import kotlinx.coroutines.withContext
 import org.orbitmvi.orbit.viewmodel.container
 
 class MainViewModel : BaseViewModel<MainUIState, MainSideEffect>() {
@@ -18,17 +19,18 @@ class MainViewModel : BaseViewModel<MainUIState, MainSideEffect>() {
 
     init {
         post(MainIntent.IntentA)
-        post(MainIntent.IntentB)
     }
 
     fun post(intent: MainIntent) {
         when (intent) {
-            //최종적으로 count는 몇일까?
             MainIntent.IntentA -> {
                 intent {
-                    Log.d("devsim","IntentA - 1")
-                    delay(100)
-                    Log.d("devsim","IntentA - 2")
+                    Log.d("devsim", "IntentA - 1 [${Thread.currentThread().name}]")
+                    withContext(Dispatchers.Main){
+                        //do something
+                        Log.d("devsim", "IntentA - 2 [${Thread.currentThread().name}]")
+                    }
+                    Log.d("devsim", "IntentA - 3 [${Thread.currentThread().name}]")
                     reduce {
                         state.copy(count = 3)
                     }
@@ -36,14 +38,6 @@ class MainViewModel : BaseViewModel<MainUIState, MainSideEffect>() {
             }
 
             MainIntent.IntentB -> {
-                intent {
-                    Log.d("devsim","IntentB - 1")
-                    delay(10)
-                    Log.d("devsim","IntentB - 2")
-                    reduce {
-                        state.copy(count = 5)
-                    }
-                }
             }
         }
     }
